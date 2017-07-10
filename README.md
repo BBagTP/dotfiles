@@ -1,6 +1,6 @@
-#README
+# README
 
-#Scope
+# Scope
 
 This is a repository containing all of my configuration files for various applications across linux and windows.
 
