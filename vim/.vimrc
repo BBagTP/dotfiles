@@ -66,6 +66,10 @@ noremap <C-n> :nohl<CR>
 vnoremap <C-n> :nohl<CR>
 inoremap <C-n> :nohl<CR>
 
+" Code snippet keymaps 
+" Inserts a skeleton html code block and positions the cursor within the <title> tag.
+nnoremap <Leader>html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a   
+
 " Quicksave command
 noremap <C-Z> :update<CR>
 vnoremap <C-Z> <C-C>:update<CR>
