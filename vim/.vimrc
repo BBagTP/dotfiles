@@ -70,6 +70,9 @@ inoremap <C-n> :nohl<CR>
 " Inserts a skeleton html code block and positions the cursor within the <title> tag.
 nnoremap <Leader>html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a   
 
+" Inserts a skeleton java class and positions the cursor to name the class
+nnoremap <Leader>java :-1read $HOME/.vim/.skeleton.java<CR>6li
+
 " Quicksave command
 noremap <C-Z> :update<CR>
 vnoremap <C-Z> <C-C>:update<CR>
