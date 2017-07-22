@@ -27,8 +27,12 @@ call pathogen#infect()
 " Vundle plugins file
 source ~/.vim/plugins.vim
 
+" set terminal
+set term=xterm
+
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
+set laststatus=2
 
 " Better copy/paste
 set pastetoggle=<F2>
@@ -66,12 +70,18 @@ noremap <C-n> :nohl<CR>
 vnoremap <C-n> :nohl<CR>
 inoremap <C-n> :nohl<CR>
 
-" Code snippet keymaps 
+" --- START: Code snippet keymaps 
 " Inserts a skeleton html code block and positions the cursor within the <title> tag.
 nnoremap <Leader>html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a   
 
 " Inserts a skeleton java class and positions the cursor to name the class
 nnoremap <Leader>java :-1read $HOME/.vim/.skeleton.java<CR>6li
+
+" Inserts a skeleton C++ code stub and positions the cursor within the main
+" method
+nnoremap <Leader>cpp :-1read $HOME/.vim/.skeleton.java<CR>4k4li
+
+" END ---
 
 " Quicksave command
 noremap <C-Z> :update<CR>
@@ -112,7 +122,7 @@ filetype on
 filetype plugin indent on
 filetype plugin on
 
-" Showing line numbers and length
+" Set vim to show line numbers (relative) and line length
 set relativenumber
 set number
 set tw=79
@@ -121,7 +131,7 @@ set fo-=t
 set colorcolumn=85
 highlight ColorColumn guibg=#073642
 
-" easier formatting of paragraphs
+" Easier formatting of paragraphs
 vmap Q gq
 nmap Q gqap
 
