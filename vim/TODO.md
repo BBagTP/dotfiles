@@ -1,13 +1,13 @@
-## TODO:
+# TODO:
 
-# Fish text colour:
+## Fish text colour:
 * run `fish_config` (web config); select "Bay Cruise"
 
-# Powerline fonts:
+## Powerline fonts:
 * visit https://askubuntu.com/questions/283908/how-can-i-install-and-use-powerline-plugin
 * copy `.fonts/` to `~/`
 
-# Fixing vim plugins:
+## Fixing vim plugins:
 Clone following git repos to `~/.vim/bundle/`:
 * vim-colors-solarized (https://github.com/altercation/vim-colors-solarized)
 * vim-numbertoggle (https://github.com/jeffkreeftmeijer/vim-numbertoggle)
