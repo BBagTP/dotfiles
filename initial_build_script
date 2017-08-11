@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Make the file executable
+chmod u+x initial_build_script
+
+# Update package list, and upgrade packages where applicable
+sudo apt-get update
+sudo apt-get upgrade
+
+# Install my standard suite of packages
+sudo apt-get install fish i3 i3-wm i3blocks i3status i3lock feh xrandr lxappearance thunar gnome-icon-theme-full rofi compton git ruby python bpython rvm
+
+# CONFIG FILES:
+# 1. Clone dotfiles repo to ~/Documents/
+git clone https://github.com/BBagTP/dotfiles.git ~/Documents/
+# 2. Copy files from cloned git repo to their respective folders
+cp ~/Documents/dotfiles/vim/.vimrc ~/
+cp -r ~/Documents/dotfiles/vim/.vim/ ~/
+cp ~/Documents/dotfiles/i3/config ~/.config/i3/
+cp ~/Documents/dotfiles/i3/config ~/.config/i3/
+cp -r ~/Documents/dotfiles/.fonts ~/
+
+# Download a wallpaper that i3 will use on startup
+mkdir ~/Pictures/wallpaper
+wget -p ~/Pictures/wallpaper/ -o wallpaper.jpg http://wallpaperstock.net/the-road-so-far..._wallpapers_27129_2560x1440.jpg
