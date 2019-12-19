@@ -1,147 +1,222 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+# mjk's .bashrc
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+export TERM='xterm-256color'
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
+MYHOST=$HOSTNAME
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# If SSHing to a remote host, start a tmux session. If one exists, connect
+# to it
+#if [ -z $STY ] && [ -z $TMUX ] && [[ $- == *i* ]]; then
+#  if [ "$DISPLAY" ]; then
+#    # graphical session specific settings
+#    :
+#  fi
+#  if [ `hostname -s` != $MYHOST ]; then
+#    export MOZ_NO_REMOTE=1
+#    if hash tmux 2> /dev/null; then
+#      echo -en "\033]0;[tmux] $HOSTNAME\007"
+#      if tmux has; then
+#        tmux attach-session
+#      else
+#        tmux
+#      fi
+#    elif hash screen 2> /dev/null; then
+#      echo -en "\033]0;[screen] $HOSTNAME\007"
+#      screen -dRR
+#    fi
+#  fi
+#fi
+
+eval `dircolors ~/.dir_colors`
+alias ls="ls -a --color=always"
+alias la="ls -al --color=always"
+alias gs="git status"
+alias gl="git log"
+alias push="git push origin"
+alias pull="git pull"
+
+export PATH=~/bin:$PATH
+
+unset LANG
+
+function status_color {
+  if [[ $2 == 000 ]]; then echo -ne '\e[93m';
+  elif [[ $1 == 0 ]]; then echo -ne '\e[32m';
+  elif [[ $1 == 1 ]]; then echo -ne '\e[31m';
+  elif [[ $1 == 2 || $1 == 126 || $1 == 127 || $1 == 128 || $1 == 255 ]]; then echo -ne '\e[91m';
+  elif [[ $1 == 148 || $1 == 147 ]]; then echo -ne '\e[95m';
+  elif [[ $1 > 128 && $1 < 144 ]]; then echo -ne '\e[35m';
+  else echo -ne '\e[33m'; 
+  fi;
+}
+
+if hash bc 2> /dev/null; then
+  function friendly_time {
+    if [[ $1 == 000 ]]; then 
+      echo "      ";
+    elif [[ $(echo "$b >= 0.01 && $b < 1000000" | bc -l) == 1 ]]; then 
+      echo $b | sed "s/\([0-9\.]\{6\}\).*/\1/g"| sed "s/\([0-9]\{5\}\)\./0\1/g"
+    else 
+      printf %0.2e $b | sed -e "s/e\(-\|+\)0/\1/g" | sed -e "s/+/↑/g" | sed -e "s/-/↓/g"
+    fi
+  }
+else
+  function friendly_time {
+    echo ???
+  }
+fi;
+
+# COLOR VARS
+COLOR_RED="\033[31m"
+COLOR_GREEN="\033[32m"
+COLOR_YELLOW="\033[33m"
+COLOR_BLUE="\033[34m"
+COLOR_MAGENTA="\033[35m"
+COLOR_CYAN="\033[36m"
+COLOR_WHITE="\033[37m"
+COLOR_DARK_GRAY="\033[90m"
+COLOR_LIGHT_RED="\033[91m"
+COLOR_LIGHT_GREEN="\033[92m"
+COLOR_LIGHT_YELLOW="\033[93m"
+COLOR_LIGHT_BLUE="\033[94m"
+COLOR_LIGHT_MAGENTA="\033[95m"
+COLOR_LIGHT_CYAN="\033[96m"
+COLOR_RESET="\033[0m"
+COLOR_OCHRE="\033[38;5;95m"
+
+## GIT BRANCH AND STATUS DISPLAY ##
+function git_color {
+  local git_repo_status="$(git status 2> /dev/null)"
+
+  if [[ ! $git_repo_status =~ "working tree clean" ]]; then
+    echo -e $COLOR_RED
+  elif [[ $git_repo_status =~ "Your branch is ahead of" ]]; then
+    echo -e $COLOR_YELLOW
+  elif [[ $git_repo_status =~ "nothing to commit" ]]; then
+    echo -e $COLOR_GREEN
+  else
+    echo -e $COLOR_OCHRE
+  fi
+}
+
+function git_branch {
+  local git_status="$(git status 2> /dev/null)"
+  local on_branch="On branch ([^${IFS}]*)"
+  local on_commit="HEAD detached at ([^${IFS}]*)"
+
+  if [[ $git_status =~ $on_branch ]]; then
+    local branch=${BASH_REMATCH[1]}
+    echo " ($branch)"
+  elif [[ $git_status =~ $on_commit ]]; then
+    local commit=${BASH_REMATCH[1]}
+    echo " ($commit)"
+  fi
+}
+
+_dir_chomp () {
+    local p=${1/#$HOME/\~} b s
+    s=${#p}
+    while [[ $p != "${p//\/}" ]]&&(($s>$2))
+    do
+        p=${p#/}
+        [[ $p =~ \.?. ]]
+        b=$b/${BASH_REMATCH[0]}
+        p=${p#*/}
+        ((s=${#b}+${#p}))
+    done
+    echo ${b/\/~/\~}${b+/}$p
+}
+
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+# Underlined
+#PS1='\[\e[4m\]\[\033[32m\][\A] \[\e[36m\]\u@\h \[\033[32m\]$(_dir_chomp "$(pwd)" 20)\[\033[33m\]\[$(git_color)\]$(git_branch)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]'
+
+# Not underlined
+#PS1='\[\033[32m\][\A] \[\e[36m\]\u@\h \[\033[32m\]$(_dir_chomp "$(pwd)" 25)\[\033[33m\]\[$(git_color)\]$(git_branch)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]' # Turquoise uname@host, green $cwd
+#PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\033[32m\]$(_dir_chomp "$(pwd)" 25)\[\033[33m\]\[$(git_color)\]$(git_branch)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]' # Yellow uname@host, green $cwd
+#PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\e[36m\]$(_dir_chomp "$(pwd)" 25)\[\033[33m\]\[$(git_color)\]$(git_branch)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]' # Yellow uname@host, turquoise $cwd
+#PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\e[35m\]$(_dir_chomp "$(pwd)" 25)\[$(git_color)\]$(git_branch) \[\033[00m\]\[\e[36m\]$ \[\033[00m\]' # Yellow uname@host, magenta $cwd
+PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\e[37m\]$(_dir_chomp "$(pwd)" 25)\[$(git_color)\]$(git_branch) \[\033[00m\]\[\e[36m\]$ \[\033[00m\]' # Yellow uname@host, light gray $cwd
+
+function simple_prompt {
+    PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\033[37m\]$(_dir_chomp "$(pwd)" 25)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]' # Yellow uname@host, light gray $cwd
+}
+#if [[ $- == *i* ]]; then
+#  # colored response codes with no-command detection
+#  export DIDCMD_FILE=/dev/shm/`whoami`-shm-didcmd-$RANDOM
+#  export LASTCMD_FILE=/dev/shm/`whoami`-shm-lastcmd-$RANDOM
+#
+#  # benchmark date
+#  a=0
+#  n=20
+#  for ((i=0; i<$n; i++)); do 
+#    b=`date +%s.%N` 
+#    c=`date +%s.%N` 
+#    a=`echo | awk "{ print $a + $c - $b }"`
+#  done
+#  export DATE_RUNTIME=`echo | awk "{ printf \"%0.9f\", $a / $n }"`
+#
+#  # set PS1 and traps
+#  PS1='\[\033]0;\u@\h:\W\007\]'
+#  PS1=$PS1'\[\e[0m$(a=$?; if [ -f  $DIDCMD_FILE ]; then b=$(echo | awk "{ printf \"%0.9f\", `date +%s.%N` - `cat $DIDCMD_FILE` - $DATE_RUNTIME }"); echo "$b\n$a" | cat $DIDCMD_FILE - >> $LASTCMD_FILE; rm -f $DIDCMD_FILE; else b=000; fi; '
+#  PS1=$PS1'status_color $a $b;'
+#  PS1=$PS1'echo -ne \e[4m\];'
+#  PS1=$PS1'friendly_time $b;'
+#  PS1=$PS1')\[\e[24m\]'
+#  PS1+="\[\$(git_color)\]"        # colors git status
+#  PS1+="\$(git_branch)"           # prints current branch
+#  PS1=$PS1'\[\e[0m\] \[\e[4m\e[36m\]\u@\h:\W\[\e[24m\] $\[\e[0m\] \[\e[92m\]'
+#  PS1=$PS1'\[\e[0m\] \[\e[4m\e[36m\]\u@\h:\w\[\e[24m\] '
+#  PS1=$PS1'\[\e[0m\] \[\e[4m\e[36m\]\u@\h:\[\e[92m\]$(_dir_chomp "$(pwd)" 20)\[\e[24m\] '
+#  PS1+="\[\$(git_color)\]"        # colors git status
+#  PS1+="\$(git_branch) "           # prints current branch
+#  PS1=$PS1'$\[\e[0m\] \[\e[92m\]'
+#  trap 'a=$?; echo -ne "\e[0m"; if [[ $BASH_COMMAND != "printf \"\\033]0;"* ]]; then echo $BASH_COMMAND > $LASTCMD_FILE; date +%s.%N > $DIDCMD_FILE; elif [ -f $LASTCMD_FILE ] && [ ! -f $DIDCMD_FILE ]; then plc.py $LASTCMD_FILE $a; fi' DEBUG
+#  trap 'rm -f $LASTCMD_FILE > /dev/null' EXIT
+#  unset PROMPT_COMMAND
+#fi
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+# make bash case insensitive
+shopt -s nocasematch
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+function clippy(){
+  xclip -i -selection clipboard
+  echo "Clipped!"
+}
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
+function db64() {
+ if [ $# = 1 ]; then
+  if [ -f $1 ]; then
+    openssl enc -base64 -d -in "$1"
+  else
+   echo -n "$1" | base64 -d
   fi
-fi
+ else
+   echo "Need one argument!"
+   return 1
+ fi
+}
 
-if [ "$TERM" = "xterm" ] ; then
-    if [ -z "$COLORTERM" ] ; then
-        if [ -z "$XTERM_VERSION" ] ; then
-            echo "Warning: Terminal wrongly calling itself 'xterm'."
-        else
-            case "$XTERM_VERSION" in
-                "XTerm(256)") TERM="xterm-256color" ;;
-                "XTerm(88)") TERM="xterm-88color" ;;
-                "XTerm") ;;
-                )
-                    echo "Warning: Unrecognized XTERM_VERSION: $XTERM_VERSION"
-                    ;;
-            esac
-        fi
-    else
-        case "$COLORTERM" in
-            gnome-terminal)
-                # Those crafty Gnome folks require you to check COLORTERM,
-                # but don't allow you to just *favor the setting over TERM.
-                # Instead you need to compare it and perform some guesses
-                # based upon the value. This is, perhaps, too simplistic.
-                TERM="gnome-256color"
-                ;;
-            *)
-                echo "Warning: Unrecognized COLORTERM: $COLORTERM"
-                ;;
-        esac
-    fi
-fi
+function test-exit-code {
+  return $1
+}
+
+export MC_SKIN=~/.mc/solarized.ini
+
+rm -f $DIDCMD_FILE $LASTCMD_FILE
+
+# Everything after this line only works in interactive shells (doesn't affect how bash works in scripts)
+[ -z "$PS1" ] && return
+
+function cd {
+    builtin cd "$@" && ls
+}
