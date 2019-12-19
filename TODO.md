@@ -1,3 +1,0 @@
-# TODO
-
-* copy `.bashrc` to `~/`
