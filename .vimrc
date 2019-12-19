@@ -2,6 +2,13 @@
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" set terminal
+set term=xterm
+
+" Automatic reloading of .vimrc
+autocmd! bufwritepost .vimrc source %
+
+
 set number
 
 " Sets how many lines of history VIM has to remember
