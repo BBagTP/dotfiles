@@ -1,0 +1,51 @@
+# Quick Switch To Directories
+alias down='cd ~/Downloads'
+alias dots='cd ~/Repositories/.dotfiles/'
+alias blog='cd ~/Blog'
+alias repos='cd ~/Repositories'
+
+# Quick Git commands
+alias gs="git status"
+alias gl="git log"
+alias push="git push origin"
+alias pull="git pull"
+
+# Quick Config Editing
+alias i3config='vim ~/.config/i3/config'
+alias vimrc='vim ~/.vimrc'
+alias bashrc='vim ~/.bashrc'
+alias aliasadd='vim ~/.alias'
+alias xresources='vim ~/.Xresources'
+alias polybarconf='vim ~/.config/polybar/config'
+alias reload='source ~/.bashrc'
+
+# Miscellaneous Commands
+alias ls="ls -a --color=always"
+alias la="ls -al --color=always"
+alias ll="ls -lv --group-directories-first --time-style=+'%d.%m.%Y %H:%M' --color=auto -F"
+#alias ls="ls -v --group-directories-first --time-style=+'%d.%m.%Y %H:%M' --color=auto -hFX"
+#alias la="ls -lav --group-directories-first --time-style=+'%d.%m.%Y %H:%M' --color=auto -F"
+#alias tree='tree -Csuh'
+alias tree='tree -C'
+alias grep='grep --color=tty -d skip'
+alias cp='cp -i'
+alias df='df -h'
+alias free='free -m'
+alias rm='rm -i'
+alias mv='mv -i'
+alias mkdir='mkdir -p'
+alias mpv='mpv --shuffle'
+alias getip='grep -oE "\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b"'
+alias passgen="python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'"
+alias pip-upgrade='pip install $(pip list --outdated --format=freeze | awk -F"==" "{print $1}") --upgrade'
+alias epochconvert="python -c 'import time; print(time.strftime(\"%a, %d %b %Y %H:%M:%S +0000\", time.localtime($@)))'"
+
+# X11 clipboard support for vim
+if [ -e /usr/bin/vimx ]; then
+	alias vim='/usr/bin/vimx'
+fi
+
+# Execute `ls` when entering directories
+function cd {
+    builtin cd "$@" && ls
+}

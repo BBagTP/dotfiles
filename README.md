@@ -1,15 +1,22 @@
-# TODO:
+Setup Description
+-----------------
 
-## Fish text colour:
-* run `fish_config` (web config); select "Bay Cruise"
+These dotfiles are intended to be "installed" by [GNU Stow](https://www.gnu.org/software/stow/) - as such, they are organised by role, which you can install individually.
 
-## Powerline fonts:
-* visit https://askubuntu.com/questions/283908/how-can-i-install-and-use-powerline-plugin
-* copy `.fonts/` to `~/`
+The `setup.sh` script will ask you which roles you want to install, one at a time.
 
-## Fixing vim plugins:
-Clone following git repos to `~/.vim/bundle/`:
-* vim-colors-solarized (https://github.com/altercation/vim-colors-solarized)
-* vim-numbertoggle (https://github.com/jeffkreeftmeijer/vim-numbertoggle)
-* (May be not necessary [i.e. already done]) Vundle.vim
-  (https://github.com/VundleVim/Vundle.vim)
+Installation
+------------
+
+1. Clone this repo (along with the current vim plugins)
+ `git clone https://github.com/llamalump/.dotfiles --recursive ~/.dotfiles`
+1. Change directory to `.dotfiles` and either:
+  1. Install each role manually with `stow <role>`
+  1. Run `setup.sh` to ask you which roles you want to install
+
+**NB:** for the `vim` role, you will need to run `:PlugInstall` in a vim editor to install the plugins (they're not tracked in this repo).
+
+Acknowledgments
+---------------
+
+* Inspired by [Kirikae's dotfiles](https://github.com/kirikae/.dotfiles)
