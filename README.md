@@ -9,7 +9,9 @@ Installation
 ------------
 
 1. Clone this repo (along with the current vim plugins)
+
     `git clone https://github.com/llamalump/.dotfiles --recursive ~/.dotfiles`
+
 1. Change directory to `.dotfiles` and either:
     1. Install each role manually with `stow -t ~ <role>`
     1. Run `setup.sh` to ask you which roles you want to install
