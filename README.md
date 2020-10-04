@@ -8,9 +8,9 @@ The `setup.sh` script will ask you which roles you want to install, one at a tim
 Installation
 ------------
 
-1. Clone this repo (along with the current vim plugins)
+1. Clone this repo
 
-    `git clone https://github.com/llamalump/.dotfiles --recursive ~/.dotfiles`
+    `git clone https://github.com/llamalump/.dotfiles ~/.dotfiles`
 
 1. Change directory to `.dotfiles` and either:
     1. Install each role manually with `stow -t ~ <role>`
