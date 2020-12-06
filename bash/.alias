@@ -7,6 +7,9 @@ alias repos='cd ~/Repositories'
 # Quick Git commands
 alias gs="git status"
 alias gl="git log"
+alias gd="git diff"
+alias gr="git remote -v"
+alias gb="git branch -av"
 alias push="git push origin"
 alias pull="git pull"
 
