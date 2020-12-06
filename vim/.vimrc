@@ -40,7 +40,7 @@ Plug 'godlygeek/tabular'
 Plug 'ogier/guessindent'
 "Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-surround'
-Plug 'chaoren/vim-wordmotion'
+"Plug 'chaoren/vim-wordmotion'
 Plug 'dietsche/vim-lastplace'
 " }}}
 " Navigation {{{
