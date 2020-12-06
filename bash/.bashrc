@@ -21,15 +21,10 @@ elif [ -f /usr/bin/virtualenvwrapper.sh ]; then
 fi
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 
-# Ensure history is written on the fly and appended each time.
-# No more lost history from closing multiple windows / panes!!
-shopt -s histappend
-PROMPT_COMMAND='$PROMPT_COMMMAND; history -a; history -n'
 HISTFILESIZE=1000000
 HISTSIZE=1000000
 HISTCONTROL="ignoredups"
 HISTIGNORE='ls:clear:history:pwd:git status'
-shopt -s cmdhist
 HISTTIMEFORMAT='%F %T '
 
 #########################################
@@ -68,12 +63,6 @@ unset LANG
 #-----------------------#
 if [[ -f ~/.alias ]]; then
 	. ~/.alias
-fi
-
-# Fix for VTE issue under TILIX, if being used
-# See: https://gnunn1.github.io/tilix-web/manual/vteconfig/
-if [ $TILIX_ID  ] || [ $VTE_VERSION  ]; then
-    source /etc/profile.d/vte.sh
 fi
 
 #########################
@@ -183,10 +172,14 @@ _dir_chomp () {
     echo ${b/\/~/\~}${b+/}$p
 }
 
-PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\e[37m\]$(_dir_chomp "$(pwd)" 25)\[$(git_color)\]$(git_branch) \[\033[00m\]\[\e[36m\]$ \[\033[00m\]' # Yellow uname@host, light gray $cwd
+PS1='┌╼ \[\033[32m\][$(date "+%Y-%m-%d %H:%M:%S %Z")] \[\033[0;33m\]\u\[\e[0m\]@\[\033[0;33m\]\h\[\033[00m\]\n└╼ \[\e[37m\]\w\[$(git_color)\]$(git_branch) \[\033[00m\]\n\[\e[36m\]$ \[\033[00m\]'
+
+function unsimple_prompt {
+    PS1='┌╼ \[\033[32m\][$(date "+%Y-%m-%d %H:%M:%S %Z")] \[\033[0;33m\]\u\[\e[0m\]@\[\033[0;33m\]\h\[\033[00m\]\n└╼ \[\e[37m\]\w\[$(git_color)\]$(git_branch) \[\033[00m\]\n\[\e[36m\]$ \[\033[00m\]'
+}
 
 function simple_prompt {
-    PS1='\[\033[32m\][\A] \[\033[0;33m\]\u@\h \[\033[37m\]$(_dir_chomp "$(pwd)" 25)\[\033[00m\]\[\e[36m\] $ \[\033[00m\]' # Yellow uname@host, light gray $cwd
+    PS1='┌╼ \[\033[32m\][$(date "+%Y-%m-%d %H:%M:%S %Z")] \[\033[0;33m\]\u\[\e[0m\]@\[\033[0;33m\]\h\[\033[00m\]\n└╼ \[\e[37m\]\w \[\033[00m\]\n\[\e[36m\]$ \[\033[00m\]'
 }
 
 eval `dircolors ~/.dir_colors`
