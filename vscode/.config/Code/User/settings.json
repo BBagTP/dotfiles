@@ -1,0 +1,64 @@
+{
+    //// Theme
+    "workbench.colorTheme": "Material Theme",
+    "workbench.iconTheme": "material-icon-theme",
+
+    //// Navigation
+    // Enable breadcrumbs
+    "breadcrumbs.enabled": true,
+
+    /// Minimap
+    // Display stylised blocks instead of rendering text in the minimap
+    "editor.minimap.renderCharacters": false,
+    // Always show the slider
+    "editor.minimap.showSlider": "always",
+
+    // Smooth scrolling animation
+    "editor.smoothScrolling": true,
+
+    /// Sidebar
+    // Move the sidebar to the right
+    "workbench.sideBar.location": "right",
+    // Render indent guides in file browser
+    "workbench.tree.renderIndentGuides": "always",
+
+    //// Editor
+    // Change editor font size when using Ctrl+Scroll
+    "editor.mouseWheelZoom": true,
+
+    // Auto-insert space after comment tag
+    "editor.comments.insertSpace": true,
+
+    // Render leading and trailing whitespace
+    "editor.renderWhitespace": "boundary",
+
+    // Auto-format files when saving
+    "editor.formatOnSave": true,
+
+    // Wrap long lines (without creating a new line)
+    "editor.wordWrap": "on",
+
+    // Rulers (line length guides)
+    "editor.rulers": [
+        // PEP-8 rule #19 - "Limit all lines to a maximum of 79 characters."
+        79,
+    ],
+
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [{
+            "scope": [
+                "entity.name.function",
+                "entity.name.method",
+            ],
+            "settings": {
+                "fontStyle": "bold"
+            }
+        }]
+    },
+
+    //// Cursor
+    "editor.cursorBlinking": "expand",
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorStyle": "block",
+    "editor.cursorWidth": 2,
+}
